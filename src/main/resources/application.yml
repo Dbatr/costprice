@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: costprice
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/costprice
+    username: root
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
