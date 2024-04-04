@@ -1,0 +1,1 @@
+Документация, доступная по ссылке: http://localhost:8080/swagger-ui. А также есть OAS, доступный по адресу: http://localhost:8080/v3/api-docs.
