@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class OrderDTO {
+    private String order_name;
     private Long materialId;
     private List<ComponentDTO> components;
     private List<Long> instrumentIds;

@@ -1,6 +1,7 @@
 package ru.fusing.costprice.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
+
+    @NotBlank(message = "The order name field can't be blank")
+    private String order_name;
 
     @ManyToOne
     @JoinColumn(name = "material_id", nullable = false)

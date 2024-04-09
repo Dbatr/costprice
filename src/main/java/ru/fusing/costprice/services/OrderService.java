@@ -39,6 +39,8 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Material not found"));
 
         Order order = new Order();
+
+        order.setOrder_name(orderDTO.getOrder_name());
         order.setMaterial(material);
 
         AtomicReference<Double> totalPrice = new AtomicReference<>(material.getPrice());
