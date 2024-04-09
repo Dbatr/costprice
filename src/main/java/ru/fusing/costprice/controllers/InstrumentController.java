@@ -30,7 +30,7 @@ public class InstrumentController {
 
     @Operation(summary = "Получение всех инструментов", description = "Возвращает список всех инструментов")
     @GetMapping("/allInstruments")
-    public ResponseEntity<List<Instrument>> getAllOrders() {
+    public ResponseEntity<List<Instrument>> getAllInstruments() {
         List<Instrument> instruments = instrumentService.getAllInstruments();
         return ResponseEntity.ok(instruments);
     }
