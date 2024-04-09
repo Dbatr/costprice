@@ -7,7 +7,7 @@ import ru.fusing.costprice.entities.Order;
 @Getter
 public class OrderResponse {
     private Order order;
-    private String message;
+    private final String message;
 
     public OrderResponse(Order order, String message) {
         this.order = order;
