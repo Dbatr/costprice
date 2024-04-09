@@ -21,6 +21,7 @@ import java.util.Optional;
 public class InstrumentController {
     private final InstrumentService instrumentService;
 
+    @Operation(summary = "Создание нового инструмента", description = "Создает новый инструмент с предоставленными данными")
     @PostMapping("/addInstrument")
     public ResponseEntity<Instrument> addInstrument(@RequestBody InstrumentDTO instrumentDTO) {
         Instrument instrument = instrumentService.addInstrument(instrumentDTO);
