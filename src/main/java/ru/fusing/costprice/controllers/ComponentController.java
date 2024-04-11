@@ -43,4 +43,15 @@ public class ComponentController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ComponentResponse("Component with ID " + id + " does not exist.")));
     }
+
+    @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID")
+    @DeleteMapping("/deleteComponent/{id}")
+    public ResponseEntity<String> deleteInstrument(@PathVariable Long id) {
+        boolean isDeleted = componentService.deleteComponent(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Component with ID " + id + " has been successfully deleted.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Component with ID " + id + " does not exist.");
+        }
+    }
 }

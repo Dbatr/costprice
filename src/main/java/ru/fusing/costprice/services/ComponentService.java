@@ -29,4 +29,12 @@ public class ComponentService {
     public Optional<Component> findComponentById(Long id) {
         return componentRepository.findById(id);
     }
+
+    public boolean deleteComponent(Long id) {
+        if (componentRepository.existsById(id)) {
+            componentRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
