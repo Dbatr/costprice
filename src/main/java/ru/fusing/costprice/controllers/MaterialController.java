@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.MaterialDTO;
-import ru.fusing.costprice.dto.MaterialResponse;
 import ru.fusing.costprice.entities.Material;
 import ru.fusing.costprice.services.MaterialService;
 
@@ -37,11 +37,11 @@ public class MaterialController {
 
     @Operation(summary = "Получение материала по ID", description = "Возвращает материал по его ID")
     @GetMapping("/material/{id}")
-    public ResponseEntity<MaterialResponse> getMaterialById(@PathVariable Long id) {
+    public ResponseEntity<EntityResponse<Material>> getMaterialById(@PathVariable Long id) {
         Optional<Material> materialOptional = materialService.findMaterialById(id);
-        return materialOptional.map(material -> ResponseEntity.ok(new MaterialResponse(material, "success")))
+        return materialOptional.map(material -> ResponseEntity.ok(new EntityResponse<>(material, "success")))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new MaterialResponse("Material with ID " + id + " does not exist.")));
+                        .body(new EntityResponse<>("Material with ID " + id + " does not exist.")));
     }
 
     @Operation(summary = "Удаление материала", description = "Удаляет материал по его ID")

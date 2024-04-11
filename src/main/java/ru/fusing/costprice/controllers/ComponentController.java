@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.fusing.costprice.dto.ComponentResponse;
 import ru.fusing.costprice.dto.Component_DTO;
+import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.entities.Component;
 import ru.fusing.costprice.services.ComponentService;
 
@@ -37,11 +37,11 @@ public class ComponentController {
 
     @Operation(summary = "Получение компонента по ID", description = "Возвращает компонент по его ID")
     @GetMapping("/component/{id}")
-    public ResponseEntity<ComponentResponse> getComponentById(@PathVariable Long id) {
+    public ResponseEntity<EntityResponse<Component>> getComponentById(@PathVariable Long id) {
         Optional<Component> componentOptional = componentService.findComponentById(id);
-        return componentOptional.map(component -> ResponseEntity.ok(new ComponentResponse(component, "success")))
+        return componentOptional.map(component -> ResponseEntity.ok(new EntityResponse<>(component, "success")))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ComponentResponse("Component with ID " + id + " does not exist.")));
+                        .body(new EntityResponse<>("Component with ID " + id + " does not exist.")));
     }
 
     @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID")

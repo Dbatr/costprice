@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.InstrumentDTO;
-import ru.fusing.costprice.dto.InstrumentResponse;
 import ru.fusing.costprice.entities.Instrument;
 import ru.fusing.costprice.services.InstrumentService;
 
@@ -37,11 +37,11 @@ public class InstrumentController {
 
     @Operation(summary = "Получение инструмента по ID", description = "Возвращает инструмент по его ID")
     @GetMapping("/instrument/{id}")
-    public ResponseEntity<InstrumentResponse> getInstrumentById(@PathVariable Long id) {
+    public ResponseEntity<EntityResponse<Instrument>> getInstrumentById(@PathVariable Long id) {
         Optional<Instrument> instrumentOptional = instrumentService.findInstrumentById(id);
-        return instrumentOptional.map(instrument -> ResponseEntity.ok(new InstrumentResponse(instrument, "success")))
+        return instrumentOptional.map(instrument -> ResponseEntity.ok(new EntityResponse<>(instrument, "success")))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new InstrumentResponse("Instrument with ID " + id + " does not exist.")));
+                        .body(new EntityResponse<>("Instrument with ID " + id + " does not exist.")));
     }
 
     @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID")

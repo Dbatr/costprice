@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.OrderDTO;
-import ru.fusing.costprice.dto.OrderResponse;
 import ru.fusing.costprice.entities.Order;
 import ru.fusing.costprice.services.OrderService;
 
@@ -38,10 +38,10 @@ public class OrderController {
 
     @Operation(summary = "Получение заказа по ID", description = "Возвращает заказ по его ID")
     @GetMapping("/order/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<EntityResponse<Order>> getOrderById(@PathVariable Long id) {
         Optional<Order> orderOptional = orderService.findOrderById(id);
-        return orderOptional.map(order -> ResponseEntity.ok(new OrderResponse(order, "success")))
+        return orderOptional.map(order -> ResponseEntity.ok(new EntityResponse<>(order, "success")))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new OrderResponse("Order with ID " + id + " does not exist.")));
+                .body(new EntityResponse<>("Order with ID " + id + " does not exist.")));
     }
 }
