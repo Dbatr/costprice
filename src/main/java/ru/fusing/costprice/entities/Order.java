@@ -32,7 +32,12 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id")
     @JsonManagedReference
-    private List<OrderInstrument> instruments; // Добавлена связь с инструментами
+    private List<OrderInstrument> instruments;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "order_id")
+    @JsonManagedReference
+    private List<OrderExpenses> expenses;
 
     @Column(name = "total_price")
     private Double totalPrice;

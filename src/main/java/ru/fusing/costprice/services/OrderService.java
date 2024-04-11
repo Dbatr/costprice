@@ -31,20 +31,24 @@ public class OrderService {
     private InstrumentRepository instrumentRepository;
 
     @Autowired
+    private ExpensesRepository expensesRepository;
+
+    @Autowired
     private OrderRepository orderRepository;
 
 
     public Order createOrder(OrderDTO orderDTO) {
-        Material material = materialRepository.findById(orderDTO.getMaterialId())
-                .orElseThrow(() -> new RuntimeException("Material not found"));
-
         Order order = new Order();
 
         order.setOrder_name(orderDTO.getOrder_name());
+
+        Material material = materialRepository.findById(orderDTO.getMaterialId())
+                .orElseThrow(() -> new RuntimeException("Material not found"));
         order.setMaterial(material);
 
         AtomicReference<Double> totalPrice = new AtomicReference<>(material.getPrice());
 
+        // Processing information about components and sizes
         List<OrderComponent> orderComponents = orderDTO.getComponents().stream().map(componentDTO -> {
             Component component = componentRepository.findById(componentDTO.getComponentId())
                     .orElseThrow(() -> new RuntimeException("Component not found"));
@@ -61,7 +65,7 @@ public class OrderService {
             return orderComponent;
         }).collect(Collectors.toList());
 
-        // Обработка информации об инструментах
+        // Processing information about instruments
         List<OrderInstrument> orderInstruments = orderDTO.getInstrumentIds().stream().map(instrumentId -> {
             Instrument instrument = instrumentRepository.findById(instrumentId)
                     .orElseThrow(() -> new RuntimeException("Instrument not found"));
@@ -73,8 +77,21 @@ public class OrderService {
             return orderInstrument;
         }).collect(Collectors.toList());
 
+        // Processing information about expenses
+        List<OrderExpenses> orderExpenses = orderDTO.getExpensesIds().stream().map(expensesId -> {
+            Expenses expenses = expensesRepository.findById(expensesId)
+                    .orElseThrow(() -> new RuntimeException("Expenses not found"));
+            totalPrice.updateAndGet(v -> v + expenses.getPrice());
+
+            OrderExpenses orderExpense = new OrderExpenses();
+            orderExpense.setExpenses(expenses);
+            orderExpense.setOrder(order);
+            return orderExpense;
+        }).collect(Collectors.toList());
+
         order.setComponents(orderComponents);
-        order.setInstruments(orderInstruments); // Добавлено поле для инструментов
+        order.setInstruments(orderInstruments);
+        order.setExpenses(orderExpenses);
         order.setTotalPrice(totalPrice.get());
         return orderRepository.save(order);
     }

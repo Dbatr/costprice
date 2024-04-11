@@ -10,6 +10,7 @@ public class OrderDTO {
     private Long materialId;
     private List<ComponentDTO> components;
     private List<Long> instrumentIds;
+    private List<Long> expensesIds;
 
     @Data
     public static class ComponentDTO {
