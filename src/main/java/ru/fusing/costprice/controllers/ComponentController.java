@@ -44,9 +44,9 @@ public class ComponentController {
                         .body(new EntityResponse<>("Component with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID")
+    @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
     @DeleteMapping("/deleteComponent/{id}")
-    public ResponseEntity<String> deleteInstrument(@PathVariable Long id) {
+    public ResponseEntity<String> deleteComponent(@PathVariable Long id) {
         boolean isDeleted = componentService.deleteComponent(id);
         if (isDeleted) {
             return ResponseEntity.ok("Component with ID " + id + " has been successfully deleted.");

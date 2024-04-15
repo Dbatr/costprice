@@ -44,14 +44,14 @@ public class MaterialController {
                         .body(new EntityResponse<>("Material with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление материала", description = "Удаляет материал по его ID")
+    @Operation(summary = "Удаление материала", description = "Удаляет материал по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
     @DeleteMapping("/deleteMaterial/{id}")
     public ResponseEntity<String> deleteMaterial(@PathVariable Long id) {
         boolean isDeleted = materialService.deleteMaterial(id);
         if (isDeleted) {
             return ResponseEntity.ok("Material with ID " + id + " has been successfully deleted.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material with ID " + id + " does not exist.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material with ID " + id + " does not exist or it used in order.");
         }
     }
 }

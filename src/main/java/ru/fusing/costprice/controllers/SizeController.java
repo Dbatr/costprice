@@ -44,14 +44,14 @@ public class SizeController {
                         .body(new EntityResponse<>("Size with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление размера", description = "Удаляет размер по его ID")
+    @Operation(summary = "Удаление размера", description = "Удаляет размер по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
     @DeleteMapping("/deleteSize/{id}")
     public ResponseEntity<String> deleteSize(@PathVariable Long id) {
         boolean isDeleted = sizeService.deleteSize(id);
         if (isDeleted) {
             return ResponseEntity.ok("Size with ID " + id + " has been successfully deleted.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Size with ID " + id + " does not exist.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Size with ID " + id + " does not exist or it used in order.");
         }
     }
 }

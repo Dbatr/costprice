@@ -1,6 +1,7 @@
 package ru.fusing.costprice.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.fusing.costprice.dto.InstrumentDTO;
 import ru.fusing.costprice.entities.Instrument;
@@ -32,8 +33,13 @@ public class InstrumentService {
 
     public boolean deleteInstrument(Long id) {
         if (instrumentRepository.existsById(id)) {
-            instrumentRepository.deleteById(id);
-            return true;
+            try {
+                instrumentRepository.deleteById(id);
+                return true;
+            } catch (DataIntegrityViolationException e) {
+                System.err.println("Failed to delete instrument with ID " + id + ": " + e.getMessage());
+                return false;
+            }
         }
         return false;
     }

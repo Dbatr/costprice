@@ -1,6 +1,7 @@
 package ru.fusing.costprice.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.fusing.costprice.dto.SizeDTO;
 import ru.fusing.costprice.entities.Size;
@@ -33,8 +34,13 @@ public class SizeService {
 
     public boolean deleteSize(Long id) {
         if (sizeRepository.existsById(id)) {
-            sizeRepository.deleteById(id);
-            return true;
+            try {
+                sizeRepository.deleteById(id);
+                return true;
+            } catch (DataIntegrityViolationException e) {
+                System.err.println("Failed to delete size with ID " + id + ": " + e.getMessage());
+                return false;
+            }
         }
         return false;
     }

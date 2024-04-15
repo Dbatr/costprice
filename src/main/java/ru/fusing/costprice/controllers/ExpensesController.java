@@ -44,14 +44,14 @@ public class ExpensesController {
                         .body(new EntityResponse<>("Expense with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление расхода", description = "Удаляет расход по его ID")
+    @Operation(summary = "Удаление расхода", description = "Удаляет расход по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
     @DeleteMapping("/deleteExpense/{id}")
     public ResponseEntity<String> deleteExpense(@PathVariable Long id) {
         boolean isDeleted = expensesService.deleteExpense(id);
         if (isDeleted) {
             return ResponseEntity.ok("Expense with ID " + id + " has been successfully deleted.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Expense with ID " + id + " does not exist.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Expense with ID " + id + " does not exist or it used in order.");
         }
     }
 }

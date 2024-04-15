@@ -1,6 +1,7 @@
 package ru.fusing.costprice.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.fusing.costprice.dto.MaterialDTO;
 import ru.fusing.costprice.entities.Material;
@@ -32,8 +33,13 @@ public class MaterialService {
 
     public boolean deleteMaterial(Long id) {
         if (materialRepository.existsById(id)) {
-            materialRepository.deleteById(id);
-            return true;
+            try {
+                materialRepository.deleteById(id);
+                return true;
+            } catch (DataIntegrityViolationException e) {
+                System.err.println("Failed to delete material with ID " + id + ": " + e.getMessage());
+                return false;
+            }
         }
         return false;
     }

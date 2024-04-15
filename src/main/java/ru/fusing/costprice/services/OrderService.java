@@ -36,6 +36,9 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private ComponentStockRepository componentStockRepository;
+
 
     public Order createOrder(OrderDTO orderDTO) {
         Order order = new Order();
@@ -57,6 +60,17 @@ public class OrderService {
 
             Double componentPrice = component.getPrice() * size.getPrice();
             totalPrice.updateAndGet(v -> v * componentPrice);
+
+            // Вычитание единицы из количества компонента в ComponentStock
+            ComponentStock componentStock = componentStockRepository.findByComponentId(component.getId());
+            if (componentStock == null) {
+                throw new RuntimeException("Component stock not found");
+            }
+            if (componentStock.getQuantity() < 1) {
+                throw new RuntimeException("Not enough components in stock");
+            }
+            componentStock.setQuantity(componentStock.getQuantity() - 1);
+            componentStockRepository.save(componentStock);
 
             OrderComponent orderComponent = new OrderComponent();
             orderComponent.setComponent(component);

@@ -44,14 +44,14 @@ public class InstrumentController {
                         .body(new EntityResponse<>("Instrument with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID")
+    @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
     @DeleteMapping("/deleteInstrument/{id}")
     public ResponseEntity<String> deleteInstrument(@PathVariable Long id) {
         boolean isDeleted = instrumentService.deleteInstrument(id);
         if (isDeleted) {
             return ResponseEntity.ok("Instrument with ID " + id + " has been successfully deleted.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Instrument with ID " + id + " does not exist.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Instrument with ID " + id + " does not exist or it used in order.");
         }
     }
 }
