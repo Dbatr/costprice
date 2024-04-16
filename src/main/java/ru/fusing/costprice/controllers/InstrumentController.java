@@ -54,4 +54,12 @@ public class InstrumentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Instrument with ID " + id + " does not exist or it used in order.");
         }
     }
+
+    @Operation(summary = "Обновление цены инструмента", description = "Обновляет цену инструмента по его ID и новой цене.")
+    @PutMapping("/instrument/{instrumentId}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Instrument>> updateInstrumentPrice(@PathVariable Long instrumentId, @PathVariable Double newPrice) {
+        Optional<Instrument> updatedInstrument = instrumentService.updateInstrumentPrice(instrumentId, newPrice);
+        return updatedInstrument.map(instrument -> ResponseEntity.ok(new EntityResponse<>(instrument, "Instrument price updated successfully")))
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Instrument not found with instrumentId " + instrumentId)));
+    }
 }

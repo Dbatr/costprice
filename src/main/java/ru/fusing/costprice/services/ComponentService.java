@@ -59,4 +59,15 @@ public class ComponentService {
         }
         return false;
     }
+
+    public Optional<Component> updateComponentPrice(Long componentId, Double newPrice) {
+        Optional<Component> optionalComponent = componentRepository.findById(componentId);
+        if (optionalComponent.isPresent()) {
+            Component component = optionalComponent.get();
+            component.setPrice(newPrice);
+            return Optional.of(componentRepository.save(component));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

@@ -42,4 +42,15 @@ public class ExpensesService {
         }
         return false;
     }
+
+    public Optional<Expenses> updateExpensesPrice(Long expensesId, Double newPrice) {
+        Optional<Expenses> optionalExpenses = expensesRepository.findById(expensesId);
+        if (optionalExpenses.isPresent()) {
+            Expenses expenses = optionalExpenses.get();
+            expenses.setPrice(newPrice);
+            return Optional.of(expensesRepository.save(expenses));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

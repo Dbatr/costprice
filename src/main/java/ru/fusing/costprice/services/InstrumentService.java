@@ -43,4 +43,15 @@ public class InstrumentService {
         }
         return false;
     }
+
+    public Optional<Instrument> updateInstrumentPrice(Long instrumentId, Double newPrice) {
+        Optional<Instrument> optionalInstrument = instrumentRepository.findById(instrumentId);
+        if (optionalInstrument.isPresent()) {
+            Instrument instrument = optionalInstrument.get();
+            instrument.setPrice(newPrice);
+            return Optional.of(instrumentRepository.save(instrument));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

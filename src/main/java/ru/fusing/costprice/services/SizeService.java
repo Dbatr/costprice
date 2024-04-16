@@ -44,4 +44,15 @@ public class SizeService {
         }
         return false;
     }
+
+    public Optional<Size> updateSizePrice(Long sizeId, Double newPrice) {
+        Optional<Size> optionalSize = sizeRepository.findById(sizeId);
+        if (optionalSize.isPresent()) {
+            Size size = optionalSize.get();
+            size.setPrice(newPrice);
+            return Optional.of(sizeRepository.save(size));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

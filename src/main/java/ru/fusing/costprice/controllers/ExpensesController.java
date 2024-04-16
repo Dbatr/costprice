@@ -54,4 +54,12 @@ public class ExpensesController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Expense with ID " + id + " does not exist or it used in order.");
         }
     }
+
+    @Operation(summary = "Обновление цены расходов", description = "Обновляет цену расходов по его ID и новой цене.")
+    @PutMapping("/expense/{id}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Expenses>> updateExpensesPrice(@PathVariable Long id, @PathVariable Double newPrice) {
+        Optional<Expenses> updatedExpenses = expensesService.updateExpensesPrice(id, newPrice);
+        return updatedExpenses.map(expenses -> ResponseEntity.ok(new EntityResponse<>(expenses, "Expenses price updated successfully")))
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Expenses not found with expensesId " + id)));
+    }
 }

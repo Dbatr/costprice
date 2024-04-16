@@ -43,4 +43,15 @@ public class MaterialService {
         }
         return false;
     }
+
+    public Optional<Material> updateMaterialPrice(Long materialId, Double newPrice) {
+        Optional<Material> optionalMaterial = materialRepository.findById(materialId);
+        if (optionalMaterial.isPresent()) {
+            Material material = optionalMaterial.get();
+            material.setPrice(newPrice);
+            return Optional.of(materialRepository.save(material));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

@@ -54,4 +54,12 @@ public class MaterialController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material with ID " + id + " does not exist or it used in order.");
         }
     }
+
+    @Operation(summary = "Обновление цены материала", description = "Обновляет цену материала по его ID и новой цене.")
+    @PutMapping("/material/{materialId}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Material>> updateMaterialPrice(@PathVariable Long materialId, @PathVariable Double newPrice) {
+        Optional<Material> updatedMaterial = materialService.updateMaterialPrice(materialId, newPrice);
+        return updatedMaterial.map(material -> ResponseEntity.ok(new EntityResponse<>(material, "Material price updated successfully")))
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Material not found with materialId " + materialId)));
+    }
 }

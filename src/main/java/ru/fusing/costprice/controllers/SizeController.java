@@ -54,4 +54,12 @@ public class SizeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Size with ID " + id + " does not exist or it used in order.");
         }
     }
+
+    @Operation(summary = "Обновление цены размера", description = "Обновляет цену размера по его ID и новой цене.")
+    @PutMapping("/size/{sizeId}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Size>> updateSizePrice(@PathVariable Long sizeId, @PathVariable Double newPrice) {
+        Optional<Size> updatedSize = sizeService.updateSizePrice(sizeId, newPrice);
+        return updatedSize.map(size -> ResponseEntity.ok(new EntityResponse<>(size, "Size price updated successfully")))
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Size not found with sizeId " + sizeId)));
+    }
 }

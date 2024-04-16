@@ -54,4 +54,12 @@ public class ComponentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Component with ID " + id + " does not exist.");
         }
     }
+
+    @Operation(summary = "Обновление цены компонента", description = "Обновляет цену компонента по его ID и новой цене")
+    @PutMapping("/component/{id}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Component>> updateComponentPrice(@PathVariable Long id, @PathVariable Double newPrice) {
+        Optional<Component> updatedComponent = componentService.updateComponentPrice(id, newPrice);
+        return updatedComponent.map(component -> ResponseEntity.ok(new EntityResponse<>(component, "Component price updated successfully")))
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Component not found with componentId " + id)));
+    }
 }
