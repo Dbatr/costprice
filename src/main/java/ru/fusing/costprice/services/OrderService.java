@@ -76,32 +76,6 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    private List<OrderExpenses> getOrderExpenses(OrderDTO orderDTO, AtomicReference<Double> totalPrice, Order order) {
-        return orderDTO.getExpensesIds().stream().map(expensesId -> {
-            Expenses expenses = expensesRepository.findById(expensesId)
-                    .orElseThrow(() -> new RuntimeException("Expenses not found"));
-            totalPrice.updateAndGet(v -> v + expenses.getPrice());
-
-            OrderExpenses orderExpense = new OrderExpenses();
-            orderExpense.setExpenses(expenses);
-            orderExpense.setOrder(order);
-            return orderExpense;
-        }).collect(Collectors.toList());
-    }
-
-    private List<OrderInstrument> getOrderInstruments(OrderDTO orderDTO, AtomicReference<Double> totalPrice, Order order) {
-        return orderDTO.getInstrumentIds().stream().map(instrumentId -> {
-            Instrument instrument = instrumentRepository.findById(instrumentId)
-                    .orElseThrow(() -> new RuntimeException("Instrument not found"));
-            totalPrice.updateAndGet(v -> v + instrument.getPrice());
-
-            OrderInstrument orderInstrument = new OrderInstrument();
-            orderInstrument.setInstrument(instrument);
-            orderInstrument.setOrder(order);
-            return orderInstrument;
-        }).collect(Collectors.toList());
-    }
-
     private List<OrderComponent> getOrderComponents(OrderDTO orderDTO, AtomicReference<Double> totalPrice, Order order) {
         return orderDTO.getComponents().stream().map(componentDTO -> {
             Component component = componentRepository.findById(componentDTO.getComponentId())
@@ -119,6 +93,32 @@ public class OrderService {
             orderComponent.setSize(size);
             orderComponent.setOrder(order);
             return orderComponent;
+        }).collect(Collectors.toList());
+    }
+
+    private List<OrderInstrument> getOrderInstruments(OrderDTO orderDTO, AtomicReference<Double> totalPrice, Order order) {
+        return orderDTO.getInstrumentIds().stream().map(instrumentId -> {
+            Instrument instrument = instrumentRepository.findById(instrumentId)
+                    .orElseThrow(() -> new RuntimeException("Instrument not found"));
+            totalPrice.updateAndGet(v -> v + instrument.getPrice());
+
+            OrderInstrument orderInstrument = new OrderInstrument();
+            orderInstrument.setInstrument(instrument);
+            orderInstrument.setOrder(order);
+            return orderInstrument;
+        }).collect(Collectors.toList());
+    }
+
+    private List<OrderExpenses> getOrderExpenses(OrderDTO orderDTO, AtomicReference<Double> totalPrice, Order order) {
+        return orderDTO.getExpensesIds().stream().map(expensesId -> {
+            Expenses expenses = expensesRepository.findById(expensesId)
+                    .orElseThrow(() -> new RuntimeException("Expenses not found"));
+            totalPrice.updateAndGet(v -> v + expenses.getPrice());
+
+            OrderExpenses orderExpense = new OrderExpenses();
+            orderExpense.setExpenses(expenses);
+            orderExpense.setOrder(order);
+            return orderExpense;
         }).collect(Collectors.toList());
     }
 
