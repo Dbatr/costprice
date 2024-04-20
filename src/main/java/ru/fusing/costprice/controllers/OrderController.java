@@ -44,4 +44,10 @@ public class OrderController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new EntityResponse<>("Order with ID " + id + " does not exist.")));
     }
+
+    @Operation(summary = "Удаление заказа по ID", description = "Удаляет заказ по его ID")
+    @DeleteMapping("/deleteOrder/{id}")
+    public ResponseEntity<EntityResponse<String>> deleteOrder(@PathVariable Long id) {
+        return orderService.deleteOrder(id);
+    }
 }

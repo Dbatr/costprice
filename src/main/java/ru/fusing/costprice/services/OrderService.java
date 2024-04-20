@@ -3,10 +3,15 @@ package ru.fusing.costprice.services;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.OrderDTO;
 import ru.fusing.costprice.entities.*;
 import ru.fusing.costprice.repositories.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +40,15 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderComponentRepository orderComponentRepository;
+
+    @Autowired
+    private OrderExpensesRepository orderExpensesRepository;
+
+    @Autowired
+    private OrderInstrumentRepository orderInstrumentRepository;
 
     @Autowired
     private ComponentStockRepository componentStockRepository;
@@ -126,5 +140,22 @@ public class OrderService {
 
     public Optional<Order> findOrderById(Long id) {
         return orderRepository.findById(id);
+    }
+
+    @Transactional
+    public ResponseEntity<EntityResponse<String>> deleteOrder(Long id) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+
+        if (orderOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new EntityResponse<>("Заказ с ID " + id + " не найден."));
+        }
+
+        orderComponentRepository.deleteByOrderId(id);
+        orderExpensesRepository.deleteByOrderId(id);
+        orderInstrumentRepository.deleteByOrderId(id);
+        orderRepository.deleteById(id);
+
+        return ResponseEntity.ok(new EntityResponse<>("Заказ с ID " + id + " успешно удален."));
     }
 }
