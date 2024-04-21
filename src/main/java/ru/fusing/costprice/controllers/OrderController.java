@@ -23,21 +23,21 @@ public class OrderController {
     private OrderService orderService;
 
     @Operation(summary = "Создание нового заказа", description = "Создает новый заказ с предоставленными данными")
-    @PostMapping("/addOrder")
+    @PostMapping("/order")
     public ResponseEntity<Double> createOrder(@RequestBody OrderDTO orderDTO) {
         Order order = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(order.getTotalPrice(), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Получение всех заказов", description = "Возвращает список всех заказов")
-    @GetMapping("/allOrders")
+    @GetMapping("/orders")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.findAllOrders();
         return ResponseEntity.ok(orders);
     }
 
     @Operation(summary = "Получение заказа по ID", description = "Возвращает заказ по его ID")
-    @GetMapping("/order/{id}")
+    @GetMapping("/orders/{id}")
     public ResponseEntity<EntityResponse<Order>> getOrderById(@PathVariable Long id) {
         Optional<Order> orderOptional = orderService.findOrderById(id);
         return orderOptional.map(order -> ResponseEntity.ok(new EntityResponse<>(order, "success")))
@@ -46,7 +46,7 @@ public class OrderController {
     }
 
     @Operation(summary = "Удаление заказа по ID", description = "Удаляет заказ по его ID")
-    @DeleteMapping("/deleteOrder/{id}")
+    @DeleteMapping("/orders/{id}")
     public ResponseEntity<EntityResponse<String>> deleteOrder(@PathVariable Long id) {
         return orderService.deleteOrder(id);
     }

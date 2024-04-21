@@ -22,21 +22,21 @@ public class InstrumentController {
     private final InstrumentService instrumentService;
 
     @Operation(summary = "Создание нового инструмента", description = "Создает новый инструмент с предоставленными данными")
-    @PostMapping("/addInstrument")
+    @PostMapping("/instrument")
     public ResponseEntity<Instrument> addInstrument(@RequestBody InstrumentDTO instrumentDTO) {
         Instrument instrument = instrumentService.addInstrument(instrumentDTO);
         return ResponseEntity.ok(instrument);
     }
 
     @Operation(summary = "Получение всех инструментов", description = "Возвращает список всех инструментов")
-    @GetMapping("/allInstruments")
+    @GetMapping("/instruments")
     public ResponseEntity<List<Instrument>> getAllInstruments() {
         List<Instrument> instruments = instrumentService.getAllInstruments();
         return ResponseEntity.ok(instruments);
     }
 
     @Operation(summary = "Получение инструмента по ID", description = "Возвращает инструмент по его ID")
-    @GetMapping("/instrument/{id}")
+    @GetMapping("/instruments/{id}")
     public ResponseEntity<EntityResponse<Instrument>> getInstrumentById(@PathVariable Long id) {
         Optional<Instrument> instrumentOptional = instrumentService.findInstrumentById(id);
         return instrumentOptional.map(instrument -> ResponseEntity.ok(new EntityResponse<>(instrument, "success")))
@@ -45,7 +45,7 @@ public class InstrumentController {
     }
 
     @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
-    @DeleteMapping("/deleteInstrument/{id}")
+    @DeleteMapping("/instruments/{id}")
     public ResponseEntity<String> deleteInstrument(@PathVariable Long id) {
         boolean isDeleted = instrumentService.deleteInstrument(id);
         if (isDeleted) {
@@ -56,10 +56,10 @@ public class InstrumentController {
     }
 
     @Operation(summary = "Обновление цены инструмента", description = "Обновляет цену инструмента по его ID и новой цене.")
-    @PutMapping("/instrument/{instrumentId}/price/{newPrice}")
-    public ResponseEntity<EntityResponse<Instrument>> updateInstrumentPrice(@PathVariable Long instrumentId, @PathVariable Double newPrice) {
-        Optional<Instrument> updatedInstrument = instrumentService.updateInstrumentPrice(instrumentId, newPrice);
+    @PutMapping("/instruments/{id}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Instrument>> updateInstrumentPrice(@PathVariable Long id, @PathVariable Double newPrice) {
+        Optional<Instrument> updatedInstrument = instrumentService.updateInstrumentPrice(id, newPrice);
         return updatedInstrument.map(instrument -> ResponseEntity.ok(new EntityResponse<>(instrument, "Instrument price updated successfully")))
-                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Instrument not found with instrumentId " + instrumentId)));
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Instrument not found with instrumentId " + id)));
     }
 }

@@ -21,7 +21,7 @@ public class ComponentStockController {
     private final ComponentStockService componentStockService;
 
     @Operation(summary = "Получение всех записей ComponentStock", description = "Возвращает список всех записей ComponentStock.")
-    @GetMapping("/allComponent-stocks")
+    @GetMapping("/component-stocks")
     public ResponseEntity<List<ComponentStock>> getAllComponentStocks() {
         List<ComponentStock> componentStocks = componentStockService.getAllComponentStocks();
         return ResponseEntity.ok(componentStocks);
@@ -44,9 +44,10 @@ public class ComponentStockController {
     }
 
     @Operation(summary = "Обновление количества компонента", description = "Обновляет количество компонента по его ID и новому количеству.")
-    @PutMapping("/component-stocks/component/{componentId}/quantity/{newQuantity}")
-    public ResponseEntity<EntityResponse<ComponentStock>> updateComponentStockQuantity(@PathVariable Long componentId, @PathVariable Integer newQuantity) {
-        Optional<ComponentStock> updatedComponentStock = componentStockService.updateComponentStockQuantity(componentId, newQuantity);
-        return updatedComponentStock.map(componentStock -> ResponseEntity.ok(new EntityResponse<>(componentStock, "ComponentStock quantity updated successfully"))).orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("ComponentStock not found with componentId " + componentId)));
+    @PutMapping("/component-stocks/component/{id}/quantity/{newQuantity}")
+    public ResponseEntity<EntityResponse<ComponentStock>> updateComponentStockQuantity(@PathVariable Long id, @PathVariable Integer newQuantity) {
+        Optional<ComponentStock> updatedComponentStock = componentStockService.updateComponentStockQuantity(id, newQuantity);
+        return updatedComponentStock.map(componentStock -> ResponseEntity.ok(new EntityResponse<>(componentStock, "ComponentStock quantity updated successfully")))
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("ComponentStock not found with componentId " + id)));
     }
 }

@@ -22,21 +22,21 @@ public class MaterialController {
     private final MaterialService materialService;
 
     @Operation(summary = "Создание нового материала", description = "Создает новый материал с предоставленными данными")
-    @PostMapping("/addMaterial")
+    @PostMapping("/material")
     public ResponseEntity<Material> addMaterial(@RequestBody MaterialDTO materialDTO) {
         Material material = materialService.addMaterial(materialDTO);
         return ResponseEntity.ok(material);
     }
 
     @Operation(summary = "Получение всех материалов", description = "Возвращает список всех материалов")
-    @GetMapping("/allMaterials")
+    @GetMapping("/materials")
     public ResponseEntity<List<Material>> getAllMaterials() {
         List<Material> materials = materialService.getAllMaterials();
         return ResponseEntity.ok(materials);
     }
 
     @Operation(summary = "Получение материала по ID", description = "Возвращает материал по его ID")
-    @GetMapping("/material/{id}")
+    @GetMapping("/materials/{id}")
     public ResponseEntity<EntityResponse<Material>> getMaterialById(@PathVariable Long id) {
         Optional<Material> materialOptional = materialService.findMaterialById(id);
         return materialOptional.map(material -> ResponseEntity.ok(new EntityResponse<>(material, "success")))
@@ -45,7 +45,7 @@ public class MaterialController {
     }
 
     @Operation(summary = "Удаление материала", description = "Удаляет материал по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
-    @DeleteMapping("/deleteMaterial/{id}")
+    @DeleteMapping("/materials/{id}")
     public ResponseEntity<String> deleteMaterial(@PathVariable Long id) {
         boolean isDeleted = materialService.deleteMaterial(id);
         if (isDeleted) {
@@ -56,10 +56,10 @@ public class MaterialController {
     }
 
     @Operation(summary = "Обновление цены материала", description = "Обновляет цену материала по его ID и новой цене.")
-    @PutMapping("/material/{materialId}/price/{newPrice}")
-    public ResponseEntity<EntityResponse<Material>> updateMaterialPrice(@PathVariable Long materialId, @PathVariable Double newPrice) {
-        Optional<Material> updatedMaterial = materialService.updateMaterialPrice(materialId, newPrice);
+    @PutMapping("/materials/{id}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Material>> updateMaterialPrice(@PathVariable Long id, @PathVariable Double newPrice) {
+        Optional<Material> updatedMaterial = materialService.updateMaterialPrice(id, newPrice);
         return updatedMaterial.map(material -> ResponseEntity.ok(new EntityResponse<>(material, "Material price updated successfully")))
-                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Material not found with materialId " + materialId)));
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Material not found with materialId " + id)));
     }
 }

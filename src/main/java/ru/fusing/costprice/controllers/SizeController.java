@@ -22,21 +22,21 @@ public class SizeController {
     private final SizeService sizeService;
 
     @Operation(summary = "Создание нового размера", description = "Создает новый размер с предоставленными данными")
-    @PostMapping("/addSize")
+    @PostMapping("/size")
     public ResponseEntity<Size> addSize(@RequestBody SizeDTO sizeDTO) {
         Size size = sizeService.addSize(sizeDTO);
         return ResponseEntity.ok(size);
     }
 
     @Operation(summary = "Получение всех размеров", description = "Возвращает список всех размеров")
-    @GetMapping("/allSizes")
+    @GetMapping("/sizes")
     public ResponseEntity<List<Size>> getAllSizes() {
         List<Size> sizes = sizeService.getAllSizes();
         return ResponseEntity.ok(sizes);
     }
 
     @Operation(summary = "Получение размера по ID", description = "Возвращает размер по его ID")
-    @GetMapping("/size/{id}")
+    @GetMapping("/sizes/{id}")
     public ResponseEntity<EntityResponse<Size>> getSizeById(@PathVariable Long id) {
         Optional<Size> sizeOptional = sizeService.findSizeById(id);
         return sizeOptional.map(size -> ResponseEntity.ok(new EntityResponse<>(size, "success")))
@@ -45,7 +45,7 @@ public class SizeController {
     }
 
     @Operation(summary = "Удаление размера", description = "Удаляет размер по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
-    @DeleteMapping("/deleteSize/{id}")
+    @DeleteMapping("/sizes/{id}")
     public ResponseEntity<String> deleteSize(@PathVariable Long id) {
         boolean isDeleted = sizeService.deleteSize(id);
         if (isDeleted) {
@@ -56,10 +56,10 @@ public class SizeController {
     }
 
     @Operation(summary = "Обновление цены размера", description = "Обновляет цену размера по его ID и новой цене.")
-    @PutMapping("/size/{sizeId}/price/{newPrice}")
-    public ResponseEntity<EntityResponse<Size>> updateSizePrice(@PathVariable Long sizeId, @PathVariable Double newPrice) {
-        Optional<Size> updatedSize = sizeService.updateSizePrice(sizeId, newPrice);
+    @PutMapping("/sizes/{id}/price/{newPrice}")
+    public ResponseEntity<EntityResponse<Size>> updateSizePrice(@PathVariable Long id, @PathVariable Double newPrice) {
+        Optional<Size> updatedSize = sizeService.updateSizePrice(id, newPrice);
         return updatedSize.map(size -> ResponseEntity.ok(new EntityResponse<>(size, "Size price updated successfully")))
-                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Size not found with sizeId " + sizeId)));
+                .orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("Size not found with sizeId " + id)));
     }
 }

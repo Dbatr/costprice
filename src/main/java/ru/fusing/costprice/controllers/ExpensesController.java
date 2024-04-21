@@ -22,21 +22,21 @@ public class ExpensesController {
     private final ExpensesService expensesService;
 
     @Operation(summary = "Создание нового расхода", description = "Создает новый расход с предоставленными данными")
-    @PostMapping("/addExpense")
+    @PostMapping("/expense")
     public ResponseEntity<Expenses> addExpense(@RequestBody ExpensesDTO expensesDTO) {
         Expenses expenses = expensesService.addExpense(expensesDTO);
         return ResponseEntity.ok(expenses);
     }
 
     @Operation(summary = "Получение всех расходов", description = "Возвращает список всех расходов")
-    @GetMapping("/allExpenses")
+    @GetMapping("/expenses")
     public ResponseEntity<List<Expenses>> getAllExpenses() {
         List<Expenses> expenses = expensesService.getAllExpenses();
         return ResponseEntity.ok(expenses);
     }
 
     @Operation(summary = "Получение расхода по ID", description = "Возвращает расход по его ID")
-    @GetMapping("/expense/{id}")
+    @GetMapping("/expenses/{id}")
     public ResponseEntity<EntityResponse<Expenses>> getExpenseById(@PathVariable Long id) {
         Optional<Expenses> expensesOptional = expensesService.findExpenseById(id);
         return expensesOptional.map(expenses -> ResponseEntity.ok(new EntityResponse<>(expenses, "success")))
@@ -45,7 +45,7 @@ public class ExpensesController {
     }
 
     @Operation(summary = "Удаление расхода", description = "Удаляет расход по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
-    @DeleteMapping("/deleteExpense/{id}")
+    @DeleteMapping("/expenses/{id}")
     public ResponseEntity<String> deleteExpense(@PathVariable Long id) {
         boolean isDeleted = expensesService.deleteExpense(id);
         if (isDeleted) {
@@ -56,7 +56,7 @@ public class ExpensesController {
     }
 
     @Operation(summary = "Обновление цены расходов", description = "Обновляет цену расходов по его ID и новой цене.")
-    @PutMapping("/expense/{id}/price/{newPrice}")
+    @PutMapping("/expenses/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Expenses>> updateExpensesPrice(@PathVariable Long id, @PathVariable Double newPrice) {
         Optional<Expenses> updatedExpenses = expensesService.updateExpensesPrice(id, newPrice);
         return updatedExpenses.map(expenses -> ResponseEntity.ok(new EntityResponse<>(expenses, "Expenses price updated successfully")))
