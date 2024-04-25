@@ -20,6 +20,7 @@ public class ComponentService {
     private final ComponentRepository componentRepository;
     private final ComponentStockRepository componentStockRepository;
 
+    @Transactional
     public Component addComponent(Component_DTO componentDTO) {
         Component component = new Component();
         component.setType(componentDTO.getType());

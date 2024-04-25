@@ -23,4 +23,3 @@ public class Component {
     private Double price;
 
 }
-// TODO при создании компонента с 0 количеством (одной транзакцией)
