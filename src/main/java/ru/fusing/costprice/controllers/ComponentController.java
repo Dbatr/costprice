@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.fusing.costprice.dto.Component_DTO;
 import ru.fusing.costprice.dto.EntityResponse;
@@ -21,7 +22,8 @@ import java.util.Optional;
 public class ComponentController {
     private final ComponentService componentService;
 
-    @Operation(summary = "Создание нового компонента", description = "Создает новый компонент с предоставленными данными")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Создание нового компонента", description = "Создает новый компонент с предоставленными данными, если роль - ADMIN")
     @PostMapping("/component")
     public ResponseEntity<Component> addComponent(@RequestBody Component_DTO componentDTO) {
         Component component = componentService.addComponent(componentDTO);
@@ -44,7 +46,8 @@ public class ComponentController {
                         .body(new EntityResponse<>("Component with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/components/{id}")
     public ResponseEntity<String> deleteComponent(@PathVariable Long id) {
         boolean isDeleted = componentService.deleteComponent(id);
@@ -55,7 +58,8 @@ public class ComponentController {
         }
     }
 
-    @Operation(summary = "Обновление цены компонента", description = "Обновляет цену компонента по его ID и новой цене")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Обновление цены компонента", description = "Обновляет цену компонента по его ID и новой цене, если роль - ADMIN")
     @PutMapping("/components/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Component>> updateComponentPrice(@PathVariable Long id, @PathVariable Double newPrice) {
         Optional<Component> updatedComponent = componentService.updateComponentPrice(id, newPrice);

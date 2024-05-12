@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.ExpensesDTO;
@@ -21,7 +22,8 @@ import java.util.Optional;
 public class ExpensesController {
     private final ExpensesService expensesService;
 
-    @Operation(summary = "Создание нового расхода", description = "Создает новый расход с предоставленными данными")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Создание нового расхода", description = "Создает новый расход с предоставленными данными, если роль - ADMIN")
     @PostMapping("/expense")
     public ResponseEntity<Expenses> addExpense(@RequestBody ExpensesDTO expensesDTO) {
         Expenses expenses = expensesService.addExpense(expensesDTO);
@@ -44,7 +46,8 @@ public class ExpensesController {
                         .body(new EntityResponse<>("Expense with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление расхода", description = "Удаляет расход по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Удаление расхода", description = "Удаляет расход по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/expenses/{id}")
     public ResponseEntity<String> deleteExpense(@PathVariable Long id) {
         boolean isDeleted = expensesService.deleteExpense(id);
@@ -55,7 +58,8 @@ public class ExpensesController {
         }
     }
 
-    @Operation(summary = "Обновление цены расходов", description = "Обновляет цену расходов по его ID и новой цене.")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Обновление цены расходов", description = "Обновляет цену расходов по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/expenses/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Expenses>> updateExpensesPrice(@PathVariable Long id, @PathVariable Double newPrice) {
         Optional<Expenses> updatedExpenses = expensesService.updateExpensesPrice(id, newPrice);

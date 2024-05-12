@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.InstrumentDTO;
@@ -21,7 +22,8 @@ import java.util.Optional;
 public class InstrumentController {
     private final InstrumentService instrumentService;
 
-    @Operation(summary = "Создание нового инструмента", description = "Создает новый инструмент с предоставленными данными")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Создание нового инструмента", description = "Создает новый инструмент с предоставленными данными, если роль - ADMIN")
     @PostMapping("/instrument")
     public ResponseEntity<Instrument> addInstrument(@RequestBody InstrumentDTO instrumentDTO) {
         Instrument instrument = instrumentService.addInstrument(instrumentDTO);
@@ -44,7 +46,8 @@ public class InstrumentController {
                         .body(new EntityResponse<>("Instrument with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/instruments/{id}")
     public ResponseEntity<String> deleteInstrument(@PathVariable Long id) {
         boolean isDeleted = instrumentService.deleteInstrument(id);
@@ -55,7 +58,8 @@ public class InstrumentController {
         }
     }
 
-    @Operation(summary = "Обновление цены инструмента", description = "Обновляет цену инструмента по его ID и новой цене.")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Обновление цены инструмента", description = "Обновляет цену инструмента по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/instruments/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Instrument>> updateInstrumentPrice(@PathVariable Long id, @PathVariable Double newPrice) {
         Optional<Instrument> updatedInstrument = instrumentService.updateInstrumentPrice(id, newPrice);

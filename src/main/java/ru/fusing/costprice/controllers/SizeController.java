@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.fusing.costprice.dto.EntityResponse;
 import ru.fusing.costprice.dto.SizeDTO;
@@ -21,7 +22,8 @@ import java.util.Optional;
 public class SizeController {
     private final SizeService sizeService;
 
-    @Operation(summary = "Создание нового размера", description = "Создает новый размер с предоставленными данными")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Создание нового размера", description = "Создает новый размер с предоставленными данными, если роль - ADMIN")
     @PostMapping("/size")
     public ResponseEntity<Size> addSize(@RequestBody SizeDTO sizeDTO) {
         Size size = sizeService.addSize(sizeDTO);
@@ -44,7 +46,8 @@ public class SizeController {
                         .body(new EntityResponse<>("Size with ID " + id + " does not exist.")));
     }
 
-    @Operation(summary = "Удаление размера", description = "Удаляет размер по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Удаление размера", description = "Удаляет размер по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/sizes/{id}")
     public ResponseEntity<String> deleteSize(@PathVariable Long id) {
         boolean isDeleted = sizeService.deleteSize(id);
@@ -55,7 +58,8 @@ public class SizeController {
         }
     }
 
-    @Operation(summary = "Обновление цены размера", description = "Обновляет цену размера по его ID и новой цене.")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Обновление цены размера", description = "Обновляет цену размера по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/sizes/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Size>> updateSizePrice(@PathVariable Long id, @PathVariable Double newPrice) {
         Optional<Size> updatedSize = sizeService.updateSizePrice(id, newPrice);
