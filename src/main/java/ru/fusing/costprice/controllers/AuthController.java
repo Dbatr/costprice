@@ -6,20 +6,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.fusing.costprice.auth.entities.RefreshToken;
 import ru.fusing.costprice.auth.entities.User;
 import ru.fusing.costprice.auth.services.AuthService;
 import ru.fusing.costprice.auth.services.JwtService;
 import ru.fusing.costprice.auth.services.RefreshTokenService;
-import ru.fusing.costprice.auth.utils.AuthResponse;
-import ru.fusing.costprice.auth.utils.LoginRequest;
-import ru.fusing.costprice.auth.utils.RefreshTokenRequest;
-import ru.fusing.costprice.auth.utils.RegisterRequest;
+import ru.fusing.costprice.auth.utils.*;
+
+import java.util.Optional;
 
 @Tag(name = "Аутентификация")
 @RestController
@@ -76,5 +73,33 @@ public class AuthController {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getRefreshToken())
                 .build());
+    }
+
+    @Operation(summary = "Получение информации о пользователе", description = "Возвращает имя, имя пользователя, email и роль пользователя для авторизованного пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Информация о пользователе успешно получена",
+                    content = @Content(schema = @Schema(implementation = AccountDetails.class))),
+            @ApiResponse(responseCode = "401", description = "Не авторизован"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
+    @GetMapping("/user")
+    public ResponseEntity<AccountDetails> getUserInfo(@RequestParam("token") String token) {
+        String email = jwtService.extractUsername(token);
+
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Optional<User> userOptional = Optional.ofNullable(authService.getUserByEmail(email));
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var user = userOptional.get();
+
+        AccountDetails accountDetails = new AccountDetails();
+        accountDetails.setName(user.getName());
+        accountDetails.setUsername(user.getRealUsername());
+        accountDetails.setEmail(user.getEmail());
+        accountDetails.setRole(user.getRole().name());
+        return ResponseEntity.ok(accountDetails);
     }
 }

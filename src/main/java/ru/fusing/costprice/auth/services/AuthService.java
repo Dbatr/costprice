@@ -59,4 +59,9 @@ public class AuthService {
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 }
