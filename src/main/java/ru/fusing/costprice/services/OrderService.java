@@ -84,7 +84,7 @@ public class OrderService {
                     .orElseThrow(() -> new RuntimeException("Size not found"));
 
             Double componentPrice = component.getPrice() * size.getPrice();
-            totalPrice.updateAndGet(v -> v * componentPrice);
+            totalPrice.updateAndGet(v -> v + componentPrice);
 
             updateComponentStock(component);
 
