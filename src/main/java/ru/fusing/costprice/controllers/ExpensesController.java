@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ExpensesController {
     private final ExpensesService expensesService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Создание нового расхода", description = "Создает новый расход с предоставленными данными, если роль - ADMIN")
     @PostMapping("/expense")
     public ResponseEntity<Expenses> addExpense(@RequestBody ExpensesDTO expensesDTO) {
@@ -46,7 +46,7 @@ public class ExpensesController {
                         .body(new EntityResponse<>("Expense with ID " + id + " does not exist.")));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Удаление расхода", description = "Удаляет расход по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/expenses/{id}")
     public ResponseEntity<String> deleteExpense(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class ExpensesController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Обновление цены расходов", description = "Обновляет цену расходов по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/expenses/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Expenses>> updateExpensesPrice(@PathVariable Long id, @PathVariable Double newPrice) {

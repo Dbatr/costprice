@@ -22,7 +22,7 @@ import java.util.Optional;
 public class SizeController {
     private final SizeService sizeService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Создание нового размера", description = "Создает новый размер с предоставленными данными, если роль - ADMIN")
     @PostMapping("/size")
     public ResponseEntity<Size> addSize(@RequestBody SizeDTO sizeDTO) {
@@ -46,7 +46,7 @@ public class SizeController {
                         .body(new EntityResponse<>("Size with ID " + id + " does not exist.")));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Удаление размера", description = "Удаляет размер по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/sizes/{id}")
     public ResponseEntity<String> deleteSize(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class SizeController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Обновление цены размера", description = "Обновляет цену размера по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/sizes/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Size>> updateSizePrice(@PathVariable Long id, @PathVariable Double newPrice) {

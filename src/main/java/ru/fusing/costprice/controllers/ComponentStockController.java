@@ -44,7 +44,7 @@ public class ComponentStockController {
         return componentStock.map(stock -> ResponseEntity.ok(new EntityResponse<>(stock, "ComponentStock found"))).orElseGet(() -> ResponseEntity.ok(new EntityResponse<>("ComponentStock not found with componentId " + componentId)));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Обновление количества компонента", description = "Обновляет количество компонента по его ID и новому количеству, если роль - ADMIN.")
     @PutMapping("/component-stocks/component/{id}/quantity/{newQuantity}")
     public ResponseEntity<EntityResponse<ComponentStock>> updateComponentStockQuantity(@PathVariable Long id, @PathVariable Integer newQuantity) {

@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ComponentController {
     private final ComponentService componentService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Создание нового компонента", description = "Создает новый компонент с предоставленными данными, если роль - ADMIN")
     @PostMapping("/component")
     public ResponseEntity<Component> addComponent(@RequestBody Component_DTO componentDTO) {
@@ -46,7 +46,7 @@ public class ComponentController {
                         .body(new EntityResponse<>("Component with ID " + id + " does not exist.")));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Удаление компонента", description = "Удаляет компонент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/components/{id}")
     public ResponseEntity<String> deleteComponent(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class ComponentController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Обновление цены компонента", description = "Обновляет цену компонента по его ID и новой цене, если роль - ADMIN")
     @PutMapping("/components/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Component>> updateComponentPrice(@PathVariable Long id, @PathVariable Double newPrice) {

@@ -22,7 +22,7 @@ import java.util.Optional;
 public class MaterialController {
     private final MaterialService materialService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Создание нового материала", description = "Создает новый материал с предоставленными данными, если роль - ADMIN")
     @PostMapping("/material")
     public ResponseEntity<Material> addMaterial(@RequestBody MaterialDTO materialDTO) {
@@ -46,7 +46,7 @@ public class MaterialController {
                         .body(new EntityResponse<>("Material with ID " + id + " does not exist.")));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Удаление материала", description = "Удаляет материал по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/materials/{id}")
     public ResponseEntity<String> deleteMaterial(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class MaterialController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Обновление цены материала", description = "Обновляет цену материала по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/materials/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Material>> updateMaterialPrice(@PathVariable Long id, @PathVariable Double newPrice) {

@@ -22,7 +22,7 @@ import java.util.Optional;
 public class InstrumentController {
     private final InstrumentService instrumentService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Создание нового инструмента", description = "Создает новый инструмент с предоставленными данными, если роль - ADMIN")
     @PostMapping("/instrument")
     public ResponseEntity<Instrument> addInstrument(@RequestBody InstrumentDTO instrumentDTO) {
@@ -46,7 +46,7 @@ public class InstrumentController {
                         .body(new EntityResponse<>("Instrument with ID " + id + " does not exist.")));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Удаление инструмента", description = "Удаляет инструмент по его ID, но удаление происходит успешно, если данный предмет не использовался в ранее созданном заказе, если роль - ADMIN")
     @DeleteMapping("/instruments/{id}")
     public ResponseEntity<String> deleteInstrument(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class InstrumentController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Обновление цены инструмента", description = "Обновляет цену инструмента по его ID и новой цене, если роль - ADMIN.")
     @PutMapping("/instruments/{id}/price/{newPrice}")
     public ResponseEntity<EntityResponse<Instrument>> updateInstrumentPrice(@PathVariable Long id, @PathVariable Double newPrice) {
